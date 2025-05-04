@@ -1,0 +1,102 @@
+{
+  "users": [
+    {
+      "name": "Adam1",
+      "email": "adam1@gmail.com",
+      "id": "4"
+    },
+    {
+      "id": "1",
+      "name": "Adam2",
+      "email": ""
+    },
+    {
+      "id": "c4a2",
+      "name": "a",
+      "email": "a"
+    },
+    {
+      "id": "68fb",
+      "name": "a",
+      "email": "aaaa"
+    },
+    {
+      "id": "2b32",
+      "name": "ádads",
+      "email": "adsadsadsads"
+    },
+    {
+      "id": "146c",
+      "name": "áasdasd",
+      "email": "adsadsadsadsdas"
+    },
+    {
+      "id": "8b44",
+      "name": "1",
+      "email": "1"
+    },
+    {
+      "id": "2d40",
+      "name": "a",
+      "email": "a"
+    },
+    {
+      "id": "e1cf",
+      "name": "a",
+      "email": "aaaa"
+    },
+    {
+      "id": "793e",
+      "name": "a",
+      "email": "a"
+    },
+    {
+      "id": "c603",
+      "name": "a",
+      "email": "a"
+    }
+  ],
+  "posts": [
+    {
+      "name": "1",
+      "email": "1@gmail.com",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "name": "Adam2",
+      "email": ""
+    },
+    {
+      "id": "3",
+      "name": "a",
+      "email": "a"
+    }
+  ],
+  "auth": [
+    {
+      "username": "viet",
+      "password": "123456",
+      "role": "user",
+      "id": "9e88"
+    },
+    {
+      "username": "viet2",
+      "password": "123456",
+      "role": "admin",
+      "id": "631f"
+    },
+    {
+      "username": "viet3",
+      "password": "123456",
+      "role": "user",
+      "id": "0419"
+    },
+    {
+      "username": "viet4",
+      "password": "123456",
+      "role": "admin",
+      "id": "aefa"
+    }
+  ]
+}
