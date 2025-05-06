@@ -1,5 +1,11 @@
 // src/hooks/useUser.ts
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useQueries,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import {
   createUser,
   deleteUser,
@@ -7,13 +13,54 @@ import {
   getUsers,
   updateUser,
   getDetailUser,
+  getUsersWithPageSize,
 } from "./api";
-import { User } from "./types";
+import { GetUsersResponse, paging, User } from "./types";
 
 export const useUsers = () => {
   return useQuery<User[], Error>({
     queryKey: ["users"],
     queryFn: getUsers,
+  });
+};
+
+export const useUsersWithPageSize = ({ page, pageSize }: paging) => {
+  return useQuery<User[], Error>({
+    queryKey: ["users", page, pageSize],
+    queryFn: () => getUsersWithPageSize({ page, pageSize }),
+  });
+};
+
+// export const useUserWithInfiniteScroll = () => {
+//   return useInfiniteQuery<
+//     GetUsersResponse,
+//     Error,
+//     GetUsersResponse,
+//     ["users"],
+//     number
+//   >({
+//     queryKey: ["users"],
+//     queryFn: async ({ pageParam = 1 }) =>
+//       getUsersWithPageSize({ page: pageParam, pageSize: 10 }),
+//     getNextPageParam: (lastPage, pages) => {
+//       return lastPage.hasMore ? lastPage.nextPage : undefined;
+//     },
+//     initialPageParam: 1,
+//   });
+// };
+
+export const useUserAndPost = () => {
+  return useQueries({
+    queries: [
+      {
+        queryKey: ["users"],
+        queryFn: getUsers,
+      },
+      {
+        queryKey: ["posts"],
+        queryFn: getPost,
+      },
+    ],
   });
 };
 
@@ -37,6 +84,7 @@ export const usePost = () => {
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   return useMutation<User, Error, Omit<User, "id">>({
+    mutationKey: ["createUser"],
     mutationFn: createUser,
     // // Bước 1: Cập nhật dữ liệu tạm thời (optimistic update)
     // onMutate: async (newUserData) => {
@@ -85,8 +133,9 @@ export const useCreateUser = () => {
     //   queryClient.invalidateQueries({ queryKey: ["users"] });
     // },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] }); // Refetch dữ liệu 
-      queryClient.refetchQueries({ queryKey: ["users"] }); // Refetch dữ liệu ngay lập tức
+      queryClient.invalidateQueries({ queryKey: ["users"] }); // Refetch dữ liệu
+    //   queryClient.refetchQueries({ queryKey: ["users"] }); // Refetch dữ liệu ngay lập tức
+    //   queryClient.refetchQueries({ queryKey: ["posts"] }); // Refetch dữ liệu ngay lập tức
     },
   });
 };

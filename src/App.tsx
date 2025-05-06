@@ -1,34 +1,106 @@
 // src/App.tsx
 import React, { useState } from "react";
-import { useUsers, useDeleteUser, useCreateUser, usePost } from "./User";
+import {
+  useUsers,
+  useDeleteUser,
+  useCreateUser,
+  useUpdateUser,
+  useUserAndPost,
+  usePost,
+  useUsersWithPageSize,
+} from "./User";
 import { Table, Button, Popconfirm } from "antd";
 import UserForm from "./Form";
 import { User } from "./types";
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useIsFetching,
+  useIsMutating,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 const App: React.FC = () => {
+  const [page, setPage] = useState<number>(1);
+  const [pageSIze, setPageSIze] = useState<number>(10);
+  const queryClient = useQueryClient();
+
   const { data: users = [], isLoading } = useUsers();
-  //   const { data: posts = []
-  //     // , isLoading: isLoadingPost
-  //  } = usePost();
+    const { data: usersWithPageSize = [] } = useUsersWithPageSize({
+      page: page || 1,
+      pageSize: pageSIze || 3,
+    });
+
+  //   const [{ data: userss }, postQuery] = useUserAndPost();
+
   const { mutate: deleteUser } = useDeleteUser();
   const { mutate: createUser } = useCreateUser();
-  const createMuation = useCreateUser();
+  const { mutate: updateUser } = useUpdateUser();
 
-  console.log('createMuation',createMuation);
+  //   const createMuation = useCreateUser();
+  //   console.log("usersAndPosts", userss, postQuery);
+  //   console.log("usersAndPosts", userss, postQuery?.data);
+  //   console.log('users',users);
+  //   console.log('posts',posts);
+  //   console.log('createMuation',createMuation);
+  const isFetchingUsers = useIsFetching({ queryKey: ["users"] });
+  const isMutationUsers = useIsMutating({ mutationKey: ["createUser"] });
+  console.log("isFetchingUsers", isFetchingUsers);
+  console.log("isMutationUsers", isMutationUsers);
 
-  const [currentUser, setCurrentUser] = useState<Omit<User, "id">>();
+  const [currentUser, setCurrentUser] = useState<User>();
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  //   console.log('posts', posts);
   return (
     <div style={{ padding: "20px" }}>
       <h1>Danh sách người dùng</h1>
-
+      <Button
+        onClick={() => {
+          setPage(page + 1);
+        }}
+      >
+        +1 page
+      </Button>
+      <Button
+        onClick={() => {
+          setPageSIze(pageSIze + 1);
+        }}
+      >
+        +1 pageSize
+      </Button>
+      <Button
+        onClick={() => {
+          const UserPageSizePrevious = queryClient.getQueryData<User[]>([
+            "users",
+            1,
+            10,
+          ]);
+          console.log("UserPageSizePrevious", UserPageSizePrevious);
+        }}
+      >
+        lấy data cũ
+      </Button>
+      <Button
+        onClick={() => {
+          queryClient.cancelQueries({ queryKey: ["users"] });
+        }}
+      >
+        cancel Query
+      </Button>{" "}
       <UserForm
-        onSubmit={(values) => createUser(values)}
+        onSubmit={(values) => {
+          if (isEdit) {
+            updateUser({
+              id: currentUser?.id,
+              userData: values,
+            });
+            setIsEdit(false);
+          } else {
+            createUser(values);
+          }
+        }}
         initialValues={isEdit ? currentUser : { name: "", email: "" }}
       />
-
       {isLoading ? (
         <p>Đang tải dữ liệu...</p>
       ) : (

@@ -1,5 +1,5 @@
 // src/components/UserForm.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Form, Input, Button, message } from "antd";
 
@@ -26,6 +26,10 @@ const UserForm: React.FC<UserFormProps> = ({
     reset();
     message.success("Thao tác thành công!");
   };
+
+  useEffect(() => {
+    reset(initialValues);
+  }, [JSON.stringify(initialValues), reset]);
 
   return (
     <Form
